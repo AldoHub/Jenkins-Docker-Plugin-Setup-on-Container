@@ -1,0 +1,29 @@
+Steps to configure Jenkins Docker plugin when running jenkins as container
+
+
+1- Install Docker Plugin on Jenkins
+2- Go to Manage Jenkins -> System Configuration -> Scroll down to bottom -> Add Cloud -> Docker
+3- If you are running docker as container, in the docker host uri you have to enter unix or tcp address of the docker host.
+   But since you are running jenkins as container, the container cant reach docker host unix port
+4- So we have to run another container that can mediate between docker host and jenkins container.
+   It will publish docker hosts unix port as tcp port. Follow the instructions to create a socat container
+   https://hub.docker.com/r/alpine/socat/ 
+
+---use the next command to configure the socat (follow the command on https://hub.docker.com/r/alpine/socat/ - "Expose a tcp socket for accessing docker" )
+   
+   docker run -d --restart=always -p 127.0.0.1:2376:2375 --network jenkins -v /var/run/docker.sock:/var/run/docker.sock alpine/socat tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+
+---That should create the proxy from jenkins master to local machine
+---Now get the ip from the socat server using (IPAddress)
+
+   docker inspect <container id 1 OR container name> | grep "IPAddress"
+   
+   OR
+   
+   docker inspect <container id OR container name> | findstr "IPAddress"
+
+5- After creating the socat container, you can go back the docker configuration in jenkins and enter tcp://<socat-container-ip>:2375  
+
+    ex: tcp://172.18.0.3:2375
+
+6- "Test Connection" should success (shows some details about the version)
