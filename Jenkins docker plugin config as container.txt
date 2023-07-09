@@ -27,3 +27,23 @@ Steps to configure Jenkins Docker plugin when running jenkins as container
     ex: tcp://172.18.0.3:2375
 
 6- "Test Connection" should success (shows some details about the version)
+
+
+
+--- now you can add a new docker agent template (below the new docker cloud created before)
+
+1.- add a new label for the docker agent
+2.- enable the agent
+3.- add a name (can be the same as the label)
+4.- set an image from docker hub where the agent will be run
+5.- set the instance capacity (low at start or will overrun the system)
+6.- set the remote file system root to /home/jenkins (workspace/jenkins folder)
+
+
+--- go to dashboard and select the job to be run and go to configure->restrict where this project can be run and enable it
+--- and add the name of the docker agent you created previously on the "expression" field
+
+--- Now when the job is built, will run on the selected cloud agent
+
+--- in case you need to make the job to check any changes on the repo go to build triggers -> Poll SCM and add an schedule like "*/5 * * * *" 
+    (in this case will randomly do a check every 5 mins)	
