@@ -24,6 +24,7 @@ pipeline {
                 echo "Testing.."
                 sh '''
                 echo "Running commands"
+                cd myapp
                 python3 hello.py
                 python3 hello.py --name=customName
                 '''
