@@ -1,0 +1,5 @@
+In order to run a pipeline, do the next steps:
+
+1.- Create a new task (pipeline)
+2.- add a script on the pipeline using Groovy syntax (pipeline script) or add a jenkinsfile (pipeline script from SCM)
+2.1.- for the pipeline SCM you will need a github repo with the jenkins file on it
